@@ -1,0 +1,24 @@
+subscription_id        = "00000000-0000-0000-0000-000000000000"
+resource_group_name    = "rg-multicloud-dr-standby-eastus2"
+location               = "eastus2"
+environment            = "dr-standby"
+cluster_name           = "standby-aks-cluster"
+kubernetes_version     = "1.29.2"
+vnet_cidr              = "10.200.0.0/16"
+aks_subnet_cidr        = "10.200.1.0/24"
+ingress_subnet_cidr    = "10.200.2.0/24"
+system_node_count      = 2
+system_vm_size         = "Standard_D2s_v5"
+workload_vm_size       = "Standard_D4s_v5"
+desired_workload_count = 3
+min_workload_count     = 2
+max_workload_count     = 6
+storage_account_name   = "stvelerodrstandby2910"
+container_name         = "velero-backups"
+
+tags = {
+  Project     = "multi-cloud-k8s-dr"
+  Environment = "dr-standby"
+  ManagedBy   = "Terraform"
+  Role        = "Standby-DR-Cluster"
+}

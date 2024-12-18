@@ -1,0 +1,42 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!example.tfvars
+terraform.rc
+.terraformrc
+.terraform/
+.terraform.lock.hcl
+
+# Kubernetes / Helm
+*.kubeconfig
+kubeconfig*
+*.token
+*.key
+*.crt
+*.pem
+
+# Cloud Provider Credentials & Local Env
+.env
+*.env
+credentials.json
+azure-auth.json
+aws-credentials
+.aws/
+.azure/
+
+# OS / Editor specifics
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.log
+
+# Scripts scratch & local dumps
+scripts/tmp/
+scripts/*.local.sh

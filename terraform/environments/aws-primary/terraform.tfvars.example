@@ -1,0 +1,20 @@
+aws_region            = "us-east-1"
+environment           = "prod-primary"
+cluster_name          = "prod-eks-primary"
+kubernetes_version    = "1.29"
+vpc_cidr              = "10.100.0.0/16"
+public_subnet_cidrs   = ["10.100.1.0/24", "10.100.2.0/24", "10.100.3.0/24"]
+private_subnet_cidrs  = ["10.100.10.0/24", "10.100.11.0/24", "10.100.12.0/24"]
+instance_types        = ["t3.xlarge"]
+desired_capacity      = 3
+min_capacity          = 2
+max_capacity          = 6
+backup_bucket_name    = "multicloud-dr-velero-backups-aws-prod-10928"
+backup_retention_days = 90
+
+tags = {
+  Project     = "multi-cloud-k8s-dr"
+  Environment = "prod-primary"
+  ManagedBy   = "Terraform"
+  Role        = "Primary-Workload-Cluster"
+}
