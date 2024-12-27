@@ -1,0 +1,74 @@
+# Velero Azure Helm Values configuration (Velero v1.13.0+)
+configuration:
+  backupStorageLocation:
+    # Primary Azure storage location for standby backups
+    - name: azure-standby-blob
+      provider: azure
+      bucket: velero-backups
+      config:
+        resourceGroup: REPLACE_WITH_AZURE_RESOURCE_GROUP
+        storageAccount: REPLACE_WITH_AZURE_STORAGE_ACCOUNT
+    # Read-only access to AWS S3 backup bucket for multi-cloud restore
+    - name: aws-primary-source
+      provider: aws
+      bucket: REPLACE_WITH_AWS_S3_BUCKET_NAME
+      accessMode: ReadOnly
+      config:
+        region: us-east-1
+
+  volumeSnapshotLocation:
+    - name: azure-standby-disk
+      provider: azure
+      config:
+        resourceGroup: REPLACE_WITH_AZURE_RESOURCE_GROUP
+
+initContainers:
+  - name: velero-plugin-for-microsoft-azure
+    image: velero/velero-plugin-for-microsoft-azure:v1.9.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.9.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+
+serviceAccount:
+  server:
+    create: true
+    name: velero-server
+    labels:
+      azure.workload.identity/use: "true"
+    annotations:
+      azure.workload.identity/client-id: "REPLACE_WITH_AZURE_MANAGED_IDENTITY_CLIENT_ID"
+
+credentials:
+  useSecret: false
+
+# Enable node-agent for restoring volume snapshots/fs-backups created on AWS EBS to Azure Managed Disks
+deployNodeAgent: true
+
+nodeAgent:
+  podVolumePath: /var/lib/kubelet/pods
+  privileged: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+
+metrics:
+  enabled: true

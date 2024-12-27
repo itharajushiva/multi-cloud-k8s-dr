@@ -1,0 +1,21 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: daily-workloads-backup
+  namespace: velero
+spec:
+  schedule: "0 2 * * *" # Daily at 02:00 UTC
+  template:
+    ttl: 720h0m0s # Retain for 30 days
+    includedNamespaces:
+      - guestbook
+      - argocd
+      - production
+    excludedNamespaces:
+      - kube-system
+      - velero
+    snapshotVolumes: true
+    defaultVolumesToFsBackup: true # Portable file-system backup via node-agent/Kopia for cross-cloud migration
+    storageLocation: aws-primary-s3
+    volumeSnapshotLocations:
+      - aws-primary-ebs

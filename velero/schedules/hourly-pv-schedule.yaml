@@ -1,0 +1,19 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: hourly-pv-state-backup
+  namespace: velero
+spec:
+  schedule: "0 * * * *" # Every hour at minute 0
+  template:
+    ttl: 168h0m0s # Retain for 7 days
+    includedNamespaces:
+      - guestbook
+    snapshotVolumes: true
+    defaultVolumesToFsBackup: true
+    storageLocation: aws-primary-s3
+    volumeSnapshotLocations:
+      - aws-primary-ebs
+    labels:
+      tier: stateful-data
+      frequency: hourly
