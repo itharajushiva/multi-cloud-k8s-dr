@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-azure-standby
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/USERNAME/multi-cloud-k8s-dr.git
+    targetRevision: main
+    path: workloads/guestbook/overlays/azure
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook
+  # Manual sync recommended for DR standby cluster to prevent race conditions during PV state restore
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
