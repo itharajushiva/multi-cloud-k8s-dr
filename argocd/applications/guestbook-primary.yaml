@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/USERNAME/multi-cloud-k8s-dr.git
+    repoURL: https://github.com/itharajushiva/multi-cloud-k8s-dr.git
     targetRevision: main
     path: workloads/guestbook/overlays/aws
   destination:

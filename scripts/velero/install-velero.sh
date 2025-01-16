@@ -28,16 +28,16 @@ if [[ "$TARGET_CLOUD" == "aws" ]]; then
   echo "[+] Deploying Velero on AWS EKS..."
   helm upgrade --install velero vmware-tanzu/velero \
     --namespace velero \
-    -f "$(dirname "$0")/../aws/values.yaml" \
+    -f "$(dirname "-f "$(dirname "$0")/../aws/values.yaml"")/../../velero/aws/values.yaml" \
     --wait
 elif [[ "$TARGET_CLOUD" == "azure" ]]; then
   echo "[+] Applying Azure Storage Class Mapping ConfigMap..."
-  kubectl apply -f "$(dirname "$0")/../azure/storage-class-mapping-configmap.yaml"
+  kubectl apply -f "$(dirname ""$(dirname "$0")/../azure/storage-class-mapping-configmap.yaml"")/../../velero/azure/storage-class-mapping-configmap.yaml"
 
   echo "[+] Deploying Velero on Azure AKS..."
   helm upgrade --install velero vmware-tanzu/velero \
     --namespace velero \
-    -f "$(dirname "$0")/../azure/values.yaml" \
+    -f "$(dirname "-f "$(dirname "$0")/../azure/values.yaml"")/../../velero/azure/values.yaml" \
     --wait
 fi
 
