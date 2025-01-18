@@ -1,4 +1,4 @@
-# Velero Azure Helm Values configuration (Velero v1.13.0+)
+# Velero Azure Helm Values configuration
 configuration:
   backupStorageLocation:
     # Primary Azure storage location for standby backups
@@ -6,12 +6,12 @@ configuration:
       provider: azure
       bucket: velero-backups
       config:
-        resourceGroup: REPLACE_WITH_AZURE_RESOURCE_GROUP
-        storageAccount: REPLACE_WITH_AZURE_STORAGE_ACCOUNT
+        resourceGroup: rg-multicloud-dr-standby-eastus2
+        storageAccount: stvelerodrstandby2910
     # Read-only access to AWS S3 backup bucket for multi-cloud restore
     - name: aws-primary-source
       provider: aws
-      bucket: REPLACE_WITH_AWS_S3_BUCKET_NAME
+      bucket: multicloud-dr-velero-backups-aws-prod-10928
       accessMode: ReadOnly
       config:
         region: us-east-1
@@ -20,7 +20,7 @@ configuration:
     - name: azure-standby-disk
       provider: azure
       config:
-        resourceGroup: REPLACE_WITH_AZURE_RESOURCE_GROUP
+        resourceGroup: rg-multicloud-dr-standby-eastus2
 
 initContainers:
   - name: velero-plugin-for-microsoft-azure
@@ -43,7 +43,7 @@ serviceAccount:
     labels:
       azure.workload.identity/use: "true"
     annotations:
-      azure.workload.identity/client-id: "REPLACE_WITH_AZURE_MANAGED_IDENTITY_CLIENT_ID"
+      azure.workload.identity/client-id: "00000000-0000-0000-0000-000000000000"
 
 credentials:
   useSecret: false

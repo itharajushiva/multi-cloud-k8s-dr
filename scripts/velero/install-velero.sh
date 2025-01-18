@@ -16,6 +16,9 @@ if [[ -z "$TARGET_CLOUD" || ! "$TARGET_CLOUD" =~ ^(aws|azure)$ ]]; then
   exit 1
 fi
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
 echo "[+] Initializing Velero Helm installation on: ${TARGET_CLOUD^^}"
 
 # Ensure Helm repository is added
@@ -28,16 +31,16 @@ if [[ "$TARGET_CLOUD" == "aws" ]]; then
   echo "[+] Deploying Velero on AWS EKS..."
   helm upgrade --install velero vmware-tanzu/velero \
     --namespace velero \
-    -f "$(dirname "-f "$(dirname "$0")/../aws/values.yaml"")/../../velero/aws/values.yaml" \
+    -f "${PROJECT_ROOT}/velero/aws/values.yaml" \
     --wait
 elif [[ "$TARGET_CLOUD" == "azure" ]]; then
   echo "[+] Applying Azure Storage Class Mapping ConfigMap..."
-  kubectl apply -f "$(dirname ""$(dirname "$0")/../azure/storage-class-mapping-configmap.yaml"")/../../velero/azure/storage-class-mapping-configmap.yaml"
+  kubectl apply -f "${PROJECT_ROOT}/velero/azure/storage-class-mapping-configmap.yaml"
 
   echo "[+] Deploying Velero on Azure AKS..."
   helm upgrade --install velero vmware-tanzu/velero \
     --namespace velero \
-    -f "$(dirname "-f "$(dirname "$0")/../azure/values.yaml"")/../../velero/azure/values.yaml" \
+    -f "${PROJECT_ROOT}/velero/azure/values.yaml" \
     --wait
 fi
 

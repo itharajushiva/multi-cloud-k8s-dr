@@ -1,9 +1,9 @@
-# Velero AWS Helm Values configuration (Velero v1.13.0+)
+# Velero AWS Helm Values configuration
 configuration:
   backupStorageLocation:
     - name: aws-primary-s3
       provider: aws
-      bucket: REPLACE_WITH_AWS_S3_BUCKET_NAME
+      bucket: multicloud-dr-velero-backups-aws-prod-10928
       config:
         region: us-east-1
   volumeSnapshotLocation:
@@ -25,12 +25,12 @@ serviceAccount:
     create: true
     name: velero-server
     annotations:
-      eks.amazonaws.com/role-arn: "REPLACE_WITH_AWS_VELERO_IRSA_ROLE_ARN"
+      eks.amazonaws.com/role-arn: "arn:aws:iam::123456789012:role/prod-eks-primary-velero-sa-role"
 
 credentials:
-  useSecret: false # Utilizing AWS IRSA (IAM Roles for Service Accounts)
+  useSecret: false
 
-# Enable node-agent (formerly restic / Kopia) for file-level PV backup portability across clouds
+# Enable node-agent for file-level volume replication (Kopia engine) across clouds
 deployNodeAgent: true
 
 nodeAgent:
